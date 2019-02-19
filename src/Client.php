@@ -6,12 +6,13 @@ namespace OpsWay\Clickpost;
 
 use GuzzleHttp\Client as BaseClient;
 use GuzzleHttp\ClientInterface;
+use OpsWay\Clickpost\Api\Auth;
 use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
-    public const TEST_ENDPOINT = 'https://test.clickpost.in/api';
-    public const PROD_ENDPOINT = 'https://clickpost.in/api';
+    public const TEST_ENDPOINT = 'https://test.clickpost.in/api/';
+    public const PROD_ENDPOINT = 'https://clickpost.in/api/';
 
     /**
      * @var BaseClient|ClientInterface|null
@@ -38,13 +39,26 @@ class Client
     {
     }
 
-    public function post(string $url, array $data)
+    /**
+     * @param string $url
+     * @param array $data
+     * @param Auth $authParams
+     *
+     * @return object
+     *
+     * @throws \Exception
+     */
+    public function post(string $url, array $data, Auth $authParams): object
     {
-        echo $url;
         $body = [
-            'headers' => ['content-type' => 'application/json'],
-            'json'    => $data
+            'headers' => ['Content-Type' => 'application/json'],
+            'body'    => \json_encode($data),
+            'query'   => [
+                'key'      => $authParams->getApiKey(),
+                'username' => $authParams->getUsername()
+            ]
         ];
+
         return $this->processResult(
             $this->httpClient->post($url, $body)
         );
@@ -58,10 +72,20 @@ class Client
     {
     }
 
-    protected function processResult(ResponseInterface $response): array
+    /**
+     * @param ResponseInterface $response
+     *
+     * @return object
+     *
+     * @throws \Exception
+     */
+    protected function processResult(ResponseInterface $response): object
     {
-        $responseData = \json_decode($response->getBody()->getContents(), true);
+        try {
+            return \GuzzleHttp\json_decode($response->getBody());
+        } catch (\Exception $exception) {
 
-        return $responseData;
+        }
+        throw new \Exception('Response from Clickpost is not success');
     }
 }

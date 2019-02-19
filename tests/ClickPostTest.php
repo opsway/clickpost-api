@@ -36,6 +36,22 @@ class ClickPostTest extends TestCase
      */
     public function testAllocation()
     {
-        $this->api->allocation()->recommendation([]);
+        $request = [[
+            'pickup_pincode'   => 110017,
+            'drop_pincode'     => 110019,
+            'order_type'       => 'PREPAID',
+            'reference_number' => '1',
+            'item'             => 'bottle',
+            'invoice_value'    => 1245,
+            'delivery_type'    => 'FORWARD',
+            'weight'           => 10,
+            'height'           => 10,
+            'length'           => 10,
+            'breadth'          => 10,
+        ]];
+
+        $result = $this->api->allocation()->recommendation($request);
+
+        self::assertEquals(200, $result->meta->status);
     }
 }
