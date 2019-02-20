@@ -35,8 +35,25 @@ class Client
         $this->httpClient = new BaseClient($requestOptions);
     }
 
-    public function get(string $url)
+    /**
+     * @param string $url
+     * @param Auth $authParams
+     * @param array $params
+     *
+     * @return object
+     *
+     * @throws \Exception
+     */
+    public function get(string $url, Auth $authParams, array $params = [])
     {
+        $query = array_merge([
+            'key'      => $authParams->getApiKey(),
+            'username' => $authParams->getUsername()
+        ], $params);
+
+        return $this->processResult(
+            $this->httpClient->get($url, ['query' => $query])
+        );
     }
 
     /**

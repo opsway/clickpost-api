@@ -117,6 +117,17 @@ class Api
     }
 
     /**
+     * @return Api\Tracking
+     *
+     * @throws \Exception
+     */
+    public function tracking()
+    {
+        $this->validateApi();
+        return new Api\Tracking($this->getClient(), $this->getUsername(), $this->getApiKey());
+    }
+
+    /**
      * @throws \Exception
      */
     private function validateApi()
