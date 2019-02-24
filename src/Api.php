@@ -128,6 +128,17 @@ class Api
     }
 
     /**
+     * @return Api\Order
+     *
+     * @throws \Exception
+     */
+    public function order()
+    {
+        $this->validateApi();
+        return new Api\Order($this->getClient(), $this->getUsername(), $this->getApiKey());
+    }
+
+    /**
      * @throws \Exception
      */
     private function validateApi()
