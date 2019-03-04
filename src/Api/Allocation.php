@@ -17,7 +17,7 @@ class Allocation extends BaseApi
      *
      * @throws \Exception
      */
-    public function recommendation(array $data)
+    public function recommendation(array $data): object
     {
         return $this->client->post(self::VERSION . "/" . self::API_PATH, $data, new Auth($this->username, $this->apiKey));
     }

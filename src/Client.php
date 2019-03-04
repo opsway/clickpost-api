@@ -7,12 +7,15 @@ namespace OpsWay\Clickpost;
 use GuzzleHttp\Client as BaseClient;
 use GuzzleHttp\ClientInterface;
 use OpsWay\Clickpost\Api\Auth;
+use OpsWay\Clickpost\Exception\ApiErrorException;
 use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
     public const TEST_ENDPOINT = 'https://test.clickpost.in/api/';
     public const PROD_ENDPOINT = 'https://clickpost.in/api/';
+
+    private const CLICKPOST_STATUS_CODE_200 = 200;
 
     /**
      * @var BaseClient|ClientInterface|null
@@ -44,16 +47,14 @@ class Client
      *
      * @throws \Exception
      */
-    public function get(string $url, Auth $authParams, array $params = [])
+    public function get(string $url, Auth $authParams, array $params = []): object
     {
         $query = array_merge([
             'key'      => $authParams->getApiKey(),
             'username' => $authParams->getUsername()
         ], $params);
 
-        return $this->processResult(
-            $this->httpClient->get($url, ['query' => $query])
-        );
+        return $this->processResult($this->httpClient->get($url, ['query' => $query]));
     }
 
     /**
@@ -76,17 +77,7 @@ class Client
             ]
         ];
 
-        return $this->processResult(
-            $this->httpClient->post($url, $body)
-        );
-    }
-
-    public function put(string $url)
-    {
-    }
-
-    public function delete(string $url)
-    {
+        return $this->processResult($this->httpClient->post($url, $body));
     }
 
     /**
@@ -94,15 +85,18 @@ class Client
      *
      * @return object
      *
-     * @throws \Exception
+     * @throws ApiErrorException
      */
     protected function processResult(ResponseInterface $response): object
     {
-        try {
-            return \GuzzleHttp\json_decode($response->getBody());
-        } catch (\Exception $exception) {
+        $responseObject = \GuzzleHttp\json_decode($response->getBody());
 
+        if ($responseObject->meta->status !== self::CLICKPOST_STATUS_CODE_200) {
+            $statusCode    = $responseObject->meta->status;
+            $statusMessage = $responseObject->meta->message;
+            throw new ApiErrorException('Error occurred during request. Status code: ' . $statusCode . ". Status message: " . $statusMessage);
         }
-        throw new \Exception('Response from Clickpost is not success');
+
+        return $responseObject;
     }
 }

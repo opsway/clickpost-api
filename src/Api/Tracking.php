@@ -18,7 +18,7 @@ class Tracking extends BaseApi
      *
      * @throws \Exception
      */
-    public function tracking(string $waybill, int $cpId)
+    public function track(string $waybill, int $cpId): object
     {
         return $this->client->get(self::VERSION . "/" . self::API_PATH, new Auth($this->username, $this->apiKey), ['waybill' => $waybill, 'cp_id' => $cpId]);
     }

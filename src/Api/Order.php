@@ -17,7 +17,7 @@ class Order extends BaseApi
      *
      * @throws \Exception
      */
-    public function create(array $data)
+    public function create(array $data): object
     {
         return $this->client->post(self::VERSION . "/" . self::API_PATH, $data, new Auth($this->username, $this->apiKey));
     }
