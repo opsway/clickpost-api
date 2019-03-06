@@ -139,6 +139,17 @@ class Api
     }
 
     /**
+     * @return Api\ExpectedDate
+     *
+     * @throws \Exception
+     */
+    public function expectedDate()
+    {
+        $this->validateApi();
+        return new Api\ExpectedDate($this->getClient(), $this->getUsername(), $this->getApiKey());
+    }
+
+    /**
      * @throws \Exception
      */
     private function validateApi()
