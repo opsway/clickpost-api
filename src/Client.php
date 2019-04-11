@@ -54,7 +54,7 @@ class Client
             'username' => $authParams->getUsername()
         ], $params);
 
-        return $this->processResult($this->httpClient->get($url, ['query' => $query]));
+        return $this->processResult($this->httpClient->get($url, ['query' => $query]), $url);
     }
 
     /**
@@ -77,24 +77,28 @@ class Client
             ]
         ];
 
-        return $this->processResult($this->httpClient->post($url, $body));
+        return $this->processResult($this->httpClient->post($url, $body), $url, $body['body']);
     }
 
     /**
      * @param ResponseInterface $response
+     * @param string $requestUrl
+     * @param string $requestBody
      *
      * @return object
      *
      * @throws ApiErrorException
      */
-    protected function processResult(ResponseInterface $response): object
+    protected function processResult(ResponseInterface $response, string $requestUrl = '', string $requestBody = ''): object
     {
         $responseObject = \GuzzleHttp\json_decode($response->getBody());
 
         if ($responseObject->meta->status !== self::CLICKPOST_STATUS_CODE_200) {
-            $statusCode    = $responseObject->meta->status;
+            $statusCode    = (int)$responseObject->meta->status;
             $statusMessage = $responseObject->meta->message;
-            throw new ApiErrorException('Error occurred during request. Status code: ' . $statusCode . ". Status message: " . $statusMessage);
+            throw (new ApiErrorException($statusMessage, $statusCode))
+                ->setRequestUrl($requestUrl)
+                ->setRequestBody($requestBody);
         }
 
         return $responseObject;
