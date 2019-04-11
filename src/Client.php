@@ -15,7 +15,7 @@ class Client
     public const TEST_ENDPOINT = 'https://test.clickpost.in/api/';
     public const PROD_ENDPOINT = 'https://www.clickpost.in/api/';
 
-    private const CLICKPOST_STATUS_CODE_200 = 300;
+    private const CLICKPOST_STATUS_CODE_200 = 200;
 
     /**
      * @var BaseClient|ClientInterface|null
@@ -54,7 +54,7 @@ class Client
             'username' => $authParams->getUsername()
         ], $params);
 
-        return $this->processResult($this->httpClient->get($url, ['query' => $query]), $url);
+        return $this->processResult($this->httpClient->get($url, ['query' => $query]));
     }
 
     /**
@@ -77,28 +77,24 @@ class Client
             ]
         ];
 
-        return $this->processResult($this->httpClient->post($url, $body), $url, $body['body']);
+        return $this->processResult($this->httpClient->post($url, $body));
     }
 
     /**
      * @param ResponseInterface $response
-     * @param string $requestUrl
-     * @param string $requestBody
      *
      * @return object
      *
      * @throws ApiErrorException
      */
-    protected function processResult(ResponseInterface $response, string $requestUrl = '', string $requestBody = ''): object
+    protected function processResult(ResponseInterface $response): object
     {
         $responseObject = \GuzzleHttp\json_decode($response->getBody());
 
         if ($responseObject->meta->status !== self::CLICKPOST_STATUS_CODE_200) {
-            $statusCode    = (int)$responseObject->meta->status;
+            $statusCode    = $responseObject->meta->status;
             $statusMessage = $responseObject->meta->message;
-            throw (new ApiErrorException($statusMessage, $statusCode))
-                ->setRequestUrl($requestUrl)
-                ->setRequestBody($requestBody);
+            throw new ApiErrorException('Error occurred during request. Status code: ' . $statusCode . ". Status message: " . $statusMessage);
         }
 
         return $responseObject;
