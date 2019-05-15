@@ -89,7 +89,12 @@ class Client
      */
     protected function processResult(ResponseInterface $response): object
     {
-        $responseObject = \GuzzleHttp\json_decode($response->getBody());
+        try {
+            $responseObject = \GuzzleHttp\json_decode($response->getBody());
+        } catch (\Exception $exception) {
+            file_put_contents('/app/data/logs/clickpost.log', date('d/m/Y H:i').": " . $response->getBody() . "\n");
+            throw new ApiErrorException($exception->getMessage());
+        }        
 
         if ($responseObject->meta->status !== self::CLICKPOST_STATUS_CODE_200) {
             $statusCode    = $responseObject->meta->status;
