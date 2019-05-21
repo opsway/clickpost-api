@@ -32,6 +32,11 @@ class Api
     protected $production = true;
 
     /**
+     * @var string
+     */
+    protected $endpointUrl;
+
+    /**
      * Api constructor.
      *
      * @param bool $production
@@ -47,7 +52,7 @@ class Api
     public function getClient(): Client
     {
         if (\is_null($this->client)) {
-            $this->setClient(new Client($this->production));
+            $this->setClient(new Client($this->production, $this->getEndpointUrl()));
         }
         return $this->client;
     }
@@ -77,6 +82,14 @@ class Api
     }
 
     /**
+     * @return string
+     */
+    public function getApiKey(): string
+    {
+        return $this->apiKey;
+    }
+
+    /**
      * @param string $username
      *
      * @return Api
@@ -88,7 +101,6 @@ class Api
         return $this;
     }
 
-
     /**
      * @return string
      */
@@ -98,11 +110,23 @@ class Api
     }
 
     /**
+     * @param string $endpointUrl
+     *
+     * @return Api
+     */
+    public function setEndpointUrl(string $endpointUrl): self
+    {
+        $this->endpointUrl = $endpointUrl;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
-    public function getApiKey(): string
+    public function getEndpointUrl(): string
     {
-        return $this->apiKey;
+        return $this->endpointUrl;
     }
 
     /**

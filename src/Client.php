@@ -27,12 +27,14 @@ class Client
      *
      * @param ClientInterface|null $httpClient
      */
-    public function __construct(bool $production = true)
+    public function __construct(bool $production = true, string $endpointUrl = null)
     {
         $requestOptions = [
-            'base_uri'    => $production ?
+            'base_uri'    => $endpointUrl ?
+                $endpointUrl :
+                ($production ?
                 self::PROD_ENDPOINT :
-                self::TEST_ENDPOINT,
+                self::TEST_ENDPOINT),
             'http_errors' => false
         ];
         $this->httpClient = new BaseClient($requestOptions);
@@ -92,7 +94,6 @@ class Client
         try {
             $responseObject = \GuzzleHttp\json_decode($response->getBody());
         } catch (\Exception $exception) {
-            file_put_contents('/app/data/logs/clickpost.log', date('d/m/Y H:i').": " . $response->getBody() . "\n");
             throw new ApiErrorException($exception->getMessage());
         }        
 
