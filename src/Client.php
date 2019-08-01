@@ -97,7 +97,7 @@ class Client
             throw new ApiErrorException($exception->getMessage());
         }        
 
-        if ($responseObject->meta->status !== self::CLICKPOST_STATUS_CODE_200) {
+        if ($responseObject->meta->status !== self::CLICKPOST_STATUS_CODE_200 && $responseObject->meta->message != 'Success') {
             $statusCode    = (int)$responseObject->meta->status;
             $statusMessage = $responseObject->meta->message;
             throw new ApiErrorException('Error occurred during request. Status code: ' . $statusCode . ". Status message: " . $statusMessage, $statusCode);
