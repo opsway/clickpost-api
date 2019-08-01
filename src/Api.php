@@ -174,6 +174,17 @@ class Api
     }
 
     /**
+     * @return Api\CancelOrder
+     *
+     * @throws \Exception
+     */
+    public function cancel()
+    {
+        $this->validateApi();
+        return new Api\CancelOrder($this->getClient(), $this->getUsername(), $this->getApiKey());
+    }
+
+    /**
      * @throws \Exception
      */
     private function validateApi()
