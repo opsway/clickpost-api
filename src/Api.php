@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace OpsWay\Clickpost;
 
@@ -37,7 +37,7 @@ class Api
     protected $endpointUrl;
 
     /**
-     * Api constructor.
+     * Api constructor
      *
      * @param bool $production
      */
@@ -51,7 +51,7 @@ class Api
      */
     public function getClient(): Client
     {
-        if (\is_null($this->client)) {
+        if ($this->client === null) {
             $this->setClient(new Client($this->production, $this->getEndpointUrl()));
         }
         return $this->client;
@@ -185,12 +185,23 @@ class Api
     }
 
     /**
+     * @return Api\PincodeServiceability
+     *
+     * @throws \Exception
+     */
+    public function pincodeServiceability()
+    {
+        $this->validateApi();
+        return new Api\PincodeServiceability($this->getClient(), $this->getUsername(), $this->getApiKey());
+    }
+
+    /**
      * @throws \Exception
      */
     private function validateApi()
     {
         if (empty($this->getApiKey()) || empty($this->getUsername())) {
-            throw new \Exception("API not fully configured", 422);
+            throw new \Exception('API not fully configured', 422);
         }
     }
 }
