@@ -94,7 +94,7 @@ class Client
         try {
             $responseObject = \GuzzleHttp\json_decode($response->getBody());
         } catch (\Exception $exception) {
-            throw new ApiErrorException($exception->getMessage());
+            throw new ApiErrorException("Internal API server error: " . preg_replace( "/\r|\n|\r\n/", "", $response->getBody()), 503);
         }        
 
         if ($responseObject->meta->status !== self::CLICKPOST_STATUS_CODE_200 && $responseObject->meta->message != 'Success') {
