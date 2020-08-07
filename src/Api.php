@@ -27,24 +27,9 @@ class Api
     protected $apiKey;
 
     /**
-     * @var bool
-     */
-    protected $production = true;
-
-    /**
      * @var string
      */
     protected $endpointUrl;
-
-    /**
-     * Api constructor
-     *
-     * @param bool $production
-     */
-    public function __construct(bool $production = true)
-    {
-        $this->production = $production;
-    }
 
     /**
      * @return Client
@@ -52,7 +37,7 @@ class Api
     public function getClient(): Client
     {
         if ($this->client === null) {
-            $this->setClient(new Client($this->production, $this->getEndpointUrl()));
+            $this->setClient(new Client($this->getEndpointUrl()));
         }
         return $this->client;
     }

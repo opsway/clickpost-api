@@ -12,9 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
-    public const TEST_ENDPOINT = 'https://test.clickpost.in/api/';
-    public const PROD_ENDPOINT = 'https://www.clickpost.in/api/';
-
+    private const CLICKPOST_API_ENDPOINT = 'https://www.clickpost.in/api/';
     private const CLICKPOST_STATUS_CODE_200 = 200;
 
     /**
@@ -27,14 +25,10 @@ class Client
      *
      * @param ClientInterface|null $httpClient
      */
-    public function __construct(bool $production = true, string $endpointUrl = null)
+    public function __construct(string $endpointUrl = null)
     {
         $requestOptions = [
-            'base_uri'    => $endpointUrl ?
-                $endpointUrl :
-                ($production ?
-                self::PROD_ENDPOINT :
-                self::TEST_ENDPOINT),
+            'base_uri'    => $endpointUrl ? $endpointUrl : self::CLICKPOST_API_ENDPOINT,
             'http_errors' => false
         ];
         $this->httpClient = new BaseClient($requestOptions);

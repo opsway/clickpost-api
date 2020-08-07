@@ -16,7 +16,7 @@ class ApiTest extends TestCase
 
     public function setUp(): void
     {
-        $this->api = new Api(false);
+        $this->api = new Api();
     }
 
     /**
