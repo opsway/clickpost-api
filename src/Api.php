@@ -148,6 +148,17 @@ class Api
     }
 
     /**
+     * @return Api\B2bOrder
+     *
+     * @throws \Exception
+     */
+    public function b2bOrder()
+    {
+        $this->validateApi();
+        return new Api\B2bOrder($this->getClient(), $this->getUsername(), $this->getApiKey());
+    }
+
+    /**
      * @return Api\ExpectedDate
      *
      * @throws \Exception
