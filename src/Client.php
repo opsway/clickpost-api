@@ -86,7 +86,7 @@ class Client
     protected function processResult(ResponseInterface $response): object
     {
         try {
-            $responseObject = \GuzzleHttp\json_decode($response->getBody());
+            $responseObject = \GuzzleHttp\json_decode((string) $response->getBody());
         } catch (\Exception $exception) {
             throw new ApiErrorException("Internal API server error: " . preg_replace( "/\r|\n|\r\n/", "", $response->getBody()), 503);
         }        
