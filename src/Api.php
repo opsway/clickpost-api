@@ -27,17 +27,12 @@ class Api
     protected $apiKey;
 
     /**
-     * @var string
-     */
-    protected $endpointUrl;
-
-    /**
      * @return Client
      */
     public function getClient(): Client
     {
         if ($this->client === null) {
-            $this->setClient(new Client($this->getEndpointUrl()));
+            $this->setClient(new Client());
         }
         return $this->client;
     }
@@ -92,26 +87,6 @@ class Api
     public function getUsername(): string
     {
         return $this->username;
-    }
-
-    /**
-     * @param string $endpointUrl
-     *
-     * @return Api
-     */
-    public function setEndpointUrl(string $endpointUrl): self
-    {
-        $this->endpointUrl = $endpointUrl;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEndpointUrl(): string
-    {
-        return $this->endpointUrl;
     }
 
     /**

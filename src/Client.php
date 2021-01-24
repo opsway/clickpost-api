@@ -25,10 +25,10 @@ class Client
      *
      * @param ClientInterface|null $httpClient
      */
-    public function __construct(string $endpointUrl = null)
+    public function __construct()
     {
         $requestOptions = [
-            'base_uri'    => $endpointUrl ? $endpointUrl : self::CLICKPOST_API_ENDPOINT,
+            'base_uri'    => self::CLICKPOST_API_ENDPOINT,
             'http_errors' => false
         ];
         $this->httpClient = new BaseClient($requestOptions);
