@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
-    private const CLICKPOST_API_ENDPOINT = 'https://www.clickpost.in/api/';
+    private const CLICKPOST_API_ENDPOINT = 'https://api.clickpost.in/api/';
     private const CLICKPOST_STATUS_CODE_200 = 200;
 
     /**
